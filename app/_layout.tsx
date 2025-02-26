@@ -1,5 +1,13 @@
-import { Stack } from "expo-router";
+import React from "react";
+import { View } from "react-native";
+import LuckyWheel from "../app/(tabs)/index";
 
-export default function RootLayout() {
-  return <Stack />;
-}
+const HomeScreen = () => {
+    return (
+        <View style={{ flex: 1 }}>
+            <LuckyWheel />
+        </View>
+    );
+};
+
+export default HomeScreen;
