@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Svg, { Path, G, Text as SvgText } from "react-native-svg";
-import Animated, { useSharedValue, withTiming, useAnimatedStyle } from "react-native-reanimated";
+import Animated, { useSharedValue, withTiming, useAnimatedStyle, runOnJS } from "react-native-reanimated";
 
 const COUPONS = ["10% OFF", "20% OFF", "30% OFF", "50% OFF", "1000Ft KUPON", "INGYENES SZÁLLÍTÁS"];
 const COLORS = ["#FF5733", "#33FF57", "#5733FF", "#FFD700", "#FF33A1", "#33FFF5"];
@@ -19,10 +19,12 @@ const LuckyWheel = () => {
         rotation.value = 0;
 
         // Animáció indítása
-        rotation.value = withTiming(finalRotation, { duration: 2000 }); // Gyorsabb pörgés
-
-        // Nyeremény beállítása
-        setTimeout(() => setSelected(COUPONS[randomSegment]), 2000); // Időzítés frissítése
+        rotation.value = withTiming(finalRotation, { duration: 2000 }, () => {
+            // Nyeremény beállítása az animáció végén
+            const normalizedRotation = finalRotation % 360;
+            const selectedSegment = Math.floor(normalizedRotation / SEGMENT_ANGLE);
+            runOnJS(setSelected)(COUPONS[selectedSegment]);
+        }); // Gyorsabb pörgés
     };
 
     const animatedStyle = useAnimatedStyle(() => ({
