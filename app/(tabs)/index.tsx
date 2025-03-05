@@ -13,18 +13,32 @@ const LuckyWheel = () => {
 
     const spinWheel = () => {
         const randomSegment = Math.floor(Math.random() * COUPONS.length);
-        const finalRotation = 360 * 5 + (randomSegment * SEGMENT_ANGLE) + (SEGMENT_ANGLE / 2); // Mindig ugyanolyan sebesség és irány
+        const extraTurns = Math.floor(Math.random() * 3) + 3; // Véletlenszerűen 3-5 teljes fordulat
+        const finalRotation = 360 * extraTurns + (randomSegment * SEGMENT_ANGLE + SEGMENT_ANGLE / 2); // Véletlenszerű szegmens alapján számolt forgás
 
         // Reseteljük a forgatást
         rotation.value = 0;
 
+        // Véletlenszerű időtartam (2000-4000 ms)
+        const duration = Math.floor(Math.random() * 2000) + 2000;
+
         // Animáció indítása
-        rotation.value = withTiming(finalRotation, { duration: 2000 }, () => {
-            // Nyeremény beállítása az animáció végén
-            const normalizedRotation = finalRotation % 360;
-            const selectedSegment = Math.floor(normalizedRotation / SEGMENT_ANGLE);
-            runOnJS(setSelected)(COUPONS[selectedSegment]);
-        }); // Gyorsabb pörgés
+        rotation.value = withTiming(finalRotation, { duration }, () => {
+            // Számoljuk ki az effektív szöget a nyíl szempontjából
+            let effective = 90 - finalRotation;
+            effective = ((effective % 360) + 360) % 360; // normalizáljuk 0-359° közé
+
+            // A megfelelő szegmens indexje
+            const selectedSegment = Math.floor(effective / SEGMENT_ANGLE) % COUPONS.length;
+            if (selectedSegment > 1) {
+                runOnJS(setSelected)(COUPONS[selectedSegment-2]);
+            } else if (selectedSegment === 1) {
+                runOnJS(setSelected)(COUPONS[COUPONS.length-1]);
+            }
+            else {
+                runOnJS(setSelected)(COUPONS[COUPONS.length-2]);
+            }
+        });
     };
 
     const animatedStyle = useAnimatedStyle(() => ({
