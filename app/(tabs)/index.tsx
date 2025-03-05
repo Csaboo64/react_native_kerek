@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar } from "react-native";
-import Svg, { Path, G, Text as SvgText, Circle } from "react-native-svg";
+import Svg, { Path, G, Text as SvgText, TSpan, Circle } from "react-native-svg";
 import Animated, { useSharedValue, withTiming, useAnimatedStyle, runOnJS } from "react-native-reanimated";
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -99,12 +99,19 @@ const LuckyWheel = () => {
                                             x={textX}
                                             y={textY}
                                             fill="white"
-                                            fontSize="10"
+                                            fontSize={coupon === "INGYENES SZÁLLÍTÁS" ? "8" : "10"}
                                             fontWeight="bold"
                                             textAnchor="middle"
                                             transform={`rotate(${(startAngle + endAngle) / 2}, ${textX}, ${textY})`}
                                         >
-                                            {coupon}
+                                            {coupon === "INGYENES SZÁLLÍTÁS" ? (
+                                                <>
+                                                    <TSpan x={textX} dy="-0.4em">INGYENES</TSpan>
+                                                    <TSpan x={textX} dy="1.2em">SZÁLLÍTÁS</TSpan>
+                                                </>
+                                            ) : (
+                                                coupon
+                                            )}
                                         </SvgText>
                                     </G>
                                 );
