@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar } from "react-native";
 import Svg, { Path, G, Text as SvgText } from "react-native-svg";
 import Animated, { useSharedValue, withTiming, useAnimatedStyle, runOnJS } from "react-native-reanimated";
+import { LinearGradient } from 'expo-linear-gradient';
 
 const COUPONS = ["10% OFF", "20% OFF", "30% OFF", "50% OFF", "1000Ft KUPON", "INGYENES SZÁLLÍTÁS"];
 const COLORS = ["#FF5733", "#33FF57", "#5733FF", "#FFD700", "#FF33A1", "#33FFF5"];
@@ -10,6 +11,7 @@ const SEGMENT_ANGLE = 360 / COUPONS.length;
 const LuckyWheel = () => {
     const rotation = useSharedValue(0);
     const [selected, setSelected] = useState<string | null>(null);
+    const [darkMode, setDarkMode] = useState(false);
 
     const spinWheel = () => {
         const randomSegment = Math.floor(Math.random() * COUPONS.length);
@@ -45,8 +47,16 @@ const LuckyWheel = () => {
         transform: [{ rotate: `${rotation.value}deg` }],
     }));
 
+    const toggleDarkMode = () => {
+        setDarkMode(!darkMode);
+    };
+
     return (
-        <View style={styles.container}>
+        <LinearGradient
+            colors={darkMode ? ['#333', '#111'] : ['#f0f0f0', '#d0d0d0']}
+            style={styles.container}
+        >
+            <StatusBar barStyle={darkMode ? "light-content" : "dark-content"} />
             {/* Nyíl a tetején */}
             <View style={styles.arrowWrapper}>
                 <View style={styles.arrow} />
@@ -98,18 +108,25 @@ const LuckyWheel = () => {
             </View>
 
             {/* Kipörgetett nyeremény */}
-            <Text style={styles.selectedText}>{selected ? `Nyeremény: ${selected}` : "Pörgesd meg a kereket!"}</Text>
+            <Text style={[styles.selectedText, darkMode ? styles.darkText : styles.lightText]}>
+                {selected ? `Nyeremény: ${selected}` : "Pörgesd meg a kereket!"}
+            </Text>
 
             {/* Pörgetés gomb */}
             <TouchableOpacity onPress={spinWheel} style={styles.button}>
                 <Text style={styles.buttonText}>Pörgetés</Text>
             </TouchableOpacity>
-        </View>
+
+            {/* Sötét mód váltó gomb */}
+            <TouchableOpacity onPress={toggleDarkMode} style={[styles.button, styles.darkModeButton]}>
+                <Text style={styles.buttonText}>{darkMode ? "Világos mód" : "Sötét mód"}</Text>
+            </TouchableOpacity>
+        </LinearGradient>
     );
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "#f0f0f0" },
+    container: { flex: 1, alignItems: "center", justifyContent: "center" },
     arrowWrapper: { alignItems: "center", marginBottom: 5 },
     arrow: {
         width: 0,
@@ -125,9 +142,12 @@ const styles = StyleSheet.create({
     },
     wheelWrapper: { alignItems: "center", justifyContent: "center", marginBottom: 20 },
     wheelContainer: { width: 250, height: 250 },
-    selectedText: { fontSize: 18, fontWeight: "bold", color: "black", marginBottom: 20 },
-    button: { padding: 15, backgroundColor: "#007bff", borderRadius: 10 },
+    selectedText: { fontSize: 18, fontWeight: "bold", marginBottom: 20 },
+    lightText: { color: "black" },
+    darkText: { color: "white" },
+    button: { padding: 15, backgroundColor: "#007bff", borderRadius: 10, marginVertical: 10 },
     buttonText: { color: "white", fontWeight: "bold", fontSize: 16 },
+    darkModeButton: { backgroundColor: "#555" },
 });
 
 export default LuckyWheel;
