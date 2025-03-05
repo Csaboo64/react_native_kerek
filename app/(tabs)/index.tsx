@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar } from "react-native";
-import Svg, { Path, G, Text as SvgText } from "react-native-svg";
+import Svg, { Path, G, Text as SvgText, Circle } from "react-native-svg";
 import Animated, { useSharedValue, withTiming, useAnimatedStyle, runOnJS } from "react-native-reanimated";
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -65,7 +65,8 @@ const LuckyWheel = () => {
             {/* Szerencsekerék */}
             <View style={styles.wheelWrapper}>
                 <Animated.View style={[styles.wheelContainer, animatedStyle]}>
-                    <Svg height="250" width="250" viewBox="0 0 200 200">
+                    <Svg height="300" width="300" viewBox="0 0 200 200">
+                        <Circle cx="100" cy="100" r="100" fill="#fff" />
                         <G rotation={-90} origin="100,100">
                             {COUPONS.map((coupon, i) => {
                                 const startAngle = i * SEGMENT_ANGLE;
@@ -103,6 +104,7 @@ const LuckyWheel = () => {
                                 );
                             })}
                         </G>
+                        <Circle cx="100" cy="100" r="10" fill="#000" />
                     </Svg>
                 </Animated.View>
             </View>
@@ -141,7 +143,7 @@ const styles = StyleSheet.create({
         borderTopColor: "red",
     },
     wheelWrapper: { alignItems: "center", justifyContent: "center", marginBottom: 20 },
-    wheelContainer: { width: 250, height: 250 },
+    wheelContainer: { width: 300, height: 300 },
     selectedText: { fontSize: 18, fontWeight: "bold", marginBottom: 20 },
     lightText: { color: "black" },
     darkText: { color: "white" },
