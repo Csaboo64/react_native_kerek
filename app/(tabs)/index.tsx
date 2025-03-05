@@ -13,7 +13,7 @@ const LuckyWheel = () => {
 
     const spinWheel = () => {
         const randomSegment = Math.floor(Math.random() * COUPONS.length);
-        const finalRotation = 360 * 5 + (randomSegment * SEGMENT_ANGLE); // Mindig ugyanolyan sebesség és irány
+        const finalRotation = 360 * 5 + (randomSegment * SEGMENT_ANGLE) + (SEGMENT_ANGLE / 2); // Mindig ugyanolyan sebesség és irány
 
         // Reseteljük a forgatást
         rotation.value = 0;
@@ -41,7 +41,7 @@ const LuckyWheel = () => {
             {/* Szerencsekerék */}
             <View style={styles.wheelWrapper}>
                 <Animated.View style={[styles.wheelContainer, animatedStyle]}>
-                    <Svg height="200" width="200" viewBox="0 0 200 200">
+                    <Svg height="250" width="250" viewBox="0 0 200 200">
                         <G rotation={-90} origin="100,100">
                             {COUPONS.map((coupon, i) => {
                                 const startAngle = i * SEGMENT_ANGLE;
@@ -95,25 +95,25 @@ const LuckyWheel = () => {
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, alignItems: "center", justifyContent: "center" },
-    arrowWrapper: { alignItems: "center", marginBottom: -0 }, // A nyilat feljebb hozza
+    container: { flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "#f0f0f0" },
+    arrowWrapper: { alignItems: "center", marginBottom: 5 },
     arrow: {
         width: 0,
         height: 0,
-        borderLeftWidth: 15,
-        borderRightWidth: 15,
-        borderTopWidth: 30, // A borderBottomWidth helyett borderTopWidth
-        borderBottomWidth: 0, // A borderBottomWidth nullára állítva
+        borderLeftWidth: 20,
+        borderRightWidth: 20,
+        borderTopWidth: 40,
+        borderBottomWidth: 0,
         borderStyle: "solid",
         borderLeftColor: "transparent",
         borderRightColor: "transparent",
-        borderTopColor: "red", // A borderBottomColor helyett borderTopColor
+        borderTopColor: "red",
     },
     wheelWrapper: { alignItems: "center", justifyContent: "center", marginBottom: 20 },
-    wheelContainer: { width: 200, height: 200 },
-    selectedText: { fontSize: 16, fontWeight: "bold", color: "black", marginBottom: 10 },
-    button: { padding: 10, backgroundColor: "blue", borderRadius: 5 },
-    buttonText: { color: "white", fontWeight: "bold" },
+    wheelContainer: { width: 250, height: 250 },
+    selectedText: { fontSize: 18, fontWeight: "bold", color: "black", marginBottom: 20 },
+    button: { padding: 15, backgroundColor: "#007bff", borderRadius: 10 },
+    buttonText: { color: "white", fontWeight: "bold", fontSize: 16 },
 });
 
 export default LuckyWheel;
