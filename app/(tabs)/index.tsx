@@ -57,6 +57,12 @@ const LuckyWheel = () => {
             style={styles.container}
         >
             <StatusBar barStyle={darkMode ? "light-content" : "dark-content"} />
+            
+            {/* App címe */}
+            <Text style={[styles.title, darkMode ? styles.darkText : styles.lightText]}>
+                HyperchargeMarket Szerencsekerék
+            </Text>
+
             {/* Nyíl a tetején */}
             <View style={styles.arrowWrapper}>
                 <View style={styles.arrow} />
@@ -111,7 +117,7 @@ const LuckyWheel = () => {
 
             {/* Kipörgetett nyeremény */}
             <Text style={[styles.selectedText, darkMode ? styles.darkText : styles.lightText]}>
-                {selected ? `Nyeremény: ${selected}` : "Pörgesd meg a kereket!"}
+                {selected ? `Gratulálok az ön nyereménye: ${selected}` : "Pörgesd meg a kereket!"}
             </Text>
 
             {/* Pörgetés gomb */}
@@ -129,6 +135,7 @@ const LuckyWheel = () => {
 
 const styles = StyleSheet.create({
     container: { flex: 1, alignItems: "center", justifyContent: "center" },
+    title: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
     arrowWrapper: { alignItems: "center", marginBottom: 5 },
     arrow: {
         width: 0,
