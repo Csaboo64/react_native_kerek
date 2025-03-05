@@ -53,7 +53,7 @@ const LuckyWheel = () => {
 
     return (
         <LinearGradient
-            colors={darkMode ? ['#333', '#111'] : ['#f0f0f0', '#d0d0d0']}
+            colors={darkMode ? ['#0f0c29', '#302b63', '#24243e'] : ['#a18cd1', '#fbc2eb']}
             style={styles.container}
         >
             <StatusBar barStyle={darkMode ? "light-content" : "dark-content"} />
