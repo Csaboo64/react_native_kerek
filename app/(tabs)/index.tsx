@@ -8,13 +8,34 @@ const COUPONS = ["10% OFF", "20% OFF", "NEM NYERT", "50% OFF", "1000Ft KUPON", "
 const COLORS = ["#FF5733", "#33FF57", "#5733FF", "#FFD700", "#FF33A1", "#33FFF5"];
 const SEGMENT_ANGLE = 360 / COUPONS.length;
 
+const WEIGHTS = {
+    "10% OFF": 25,
+    "20% OFF": 10,
+    "NEM NYERT": 10,
+    "50% OFF": 5,
+    "1000Ft KUPON": 25,
+    "INGYENES SZÁLLÍTÁS": 25
+};
+
+const getRandomCoupon = () => {
+    const weightedCoupons = [];
+    for (const [coupon, weight] of Object.entries(WEIGHTS)) {
+        for (let i = 0; i < weight * 10; i++) {
+            weightedCoupons.push(coupon);
+        }
+    }
+    const randomIndex = Math.floor(Math.random() * weightedCoupons.length);
+    return weightedCoupons[randomIndex];
+};
+
 const LuckyWheel = () => {
     const rotation = useSharedValue(0);
     const [selected, setSelected] = useState<string | null>(null);
     const [darkMode, setDarkMode] = useState(false);
 
     const spinWheel = () => {
-        const randomSegment = Math.floor(Math.random() * COUPONS.length);
+        const randomCoupon = getRandomCoupon();
+        const randomSegment = COUPONS.indexOf(randomCoupon);
         const extraTurns = Math.floor(Math.random() * 3) + 3; // Véletlenszerűen 3-5 teljes fordulat
         const finalRotation = 360 * extraTurns + (randomSegment * SEGMENT_ANGLE + SEGMENT_ANGLE / 2); // Véletlenszerű szegmens alapján számolt forgás
 
