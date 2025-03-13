@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, StatusBar } from "react-native";
+import { View, Text, TouchableOpacity, StatusBar } from "react-native";
 import Svg, { Path, G, Text as SvgText, TSpan, Circle } from "react-native-svg";
 import Animated, { useSharedValue, withTiming, useAnimatedStyle, runOnJS } from "react-native-reanimated";
 import { LinearGradient } from 'expo-linear-gradient';
+import { styles } from './styles';
 
 const COUPONS = ["10% OFF", "20% OFF", "NEM NYERT", "50% OFF", "1000Ft KUPON", "INGYENES SZÁLLÍTÁS"];
 const COLORS = ["#FF5733", "#33FF57", "#5733FF", "#FFD700", "#FF33A1", "#33FFF5"];
@@ -160,31 +161,5 @@ const LuckyWheel = () => {
         </LinearGradient>
     );
 };
-
-const styles = StyleSheet.create({
-    container: { flex: 1, alignItems: "center", justifyContent: "center" },
-    title: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
-    arrowWrapper: { alignItems: "center", marginBottom: 5 },
-    arrow: {
-        width: 0,
-        height: 0,
-        borderLeftWidth: 20,
-        borderRightWidth: 20,
-        borderTopWidth: 40,
-        borderBottomWidth: 0,
-        borderStyle: "solid",
-        borderLeftColor: "transparent",
-        borderRightColor: "transparent",
-        borderTopColor: "red",
-    },
-    wheelWrapper: { alignItems: "center", justifyContent: "center", marginBottom: 20 },
-    wheelContainer: { width: 300, height: 300 },
-    selectedText: { fontSize: 18, fontWeight: "bold", marginBottom: 20 },
-    lightText: { color: "black" },
-    darkText: { color: "white" },
-    button: { padding: 15, backgroundColor: "#007bff", borderRadius: 10, marginVertical: 10 },
-    buttonText: { color: "white", fontWeight: "bold", fontSize: 16 },
-    darkModeButton: { backgroundColor: "#555" },
-});
 
 export default LuckyWheel;
