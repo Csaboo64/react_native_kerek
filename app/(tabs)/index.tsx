@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StatusBar } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, StatusBar, Alert } from "react-native";
 import Svg, { Path, G, Text as SvgText, TSpan, Circle } from "react-native-svg";
 import Animated, { useSharedValue, withTiming, useAnimatedStyle, runOnJS } from "react-native-reanimated";
 import { LinearGradient } from 'expo-linear-gradient';
 import { styles } from './styles';
+import DeviceInfo from 'react-native-device-info';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const COUPONS = ["10% OFF", "20% OFF", "NEM NYERT", "50% OFF", "1000Ft KUPON", "INGYENES SZÁLLÍTÁS"];
 const COLORS = ["#FF5733", "#33FF57", "#5733FF", "#FFD700", "#FF33A1", "#33FFF5"];
@@ -35,6 +37,10 @@ const LuckyWheel = () => {
     const [darkMode, setDarkMode] = useState(false);
     const [couponCode, setCouponCode] = useState<string | null>(null);
 
+    useEffect(() => {
+        checkLastSpinDate();
+    }, []);
+
     const fetchCouponCode = async (type: string) => {
         try {
             const encodedType = encodeURIComponent(type);
@@ -50,7 +56,27 @@ const LuckyWheel = () => {
         }
     };
 
-    const spinWheel = () => {
+    const checkLastSpinDate = async () => {
+        const deviceId = DeviceInfo.getUniqueId();
+        const lastSpinDate = await AsyncStorage.getItem(`lastSpinDate_${deviceId}`);
+        const today = new Date().toISOString().split('T')[0];
+        console.log(today);
+
+        if (lastSpinDate === today) {
+            console.log("Ma már pörgetted a kereket. Kérlek próbáld újra holnap.");
+        }
+    };
+
+    const spinWheel = async () => {
+        const deviceId = DeviceInfo.getUniqueId();
+        const lastSpinDate = await AsyncStorage.getItem(`lastSpinDate_${deviceId}`);
+        const today = new Date().toISOString().split('T')[0];
+
+        if (lastSpinDate === today) {
+            console.log("Ma már pörgetted a kereket. Kérlek próbáld újra holnap.");
+            return;
+        }
+
         const randomCoupon = getRandomCoupon();
         const randomSegment = COUPONS.indexOf(randomCoupon);
         const extraTurns = Math.floor(Math.random() * 3) + 3; // Véletlenszerűen 3-5 teljes fordulat
@@ -81,6 +107,8 @@ const LuckyWheel = () => {
                 runOnJS(setSelected)(COUPONS[COUPONS.length-2]);
                 fetchCouponCode((COUPONS.length-2).toString());
             }
+
+            AsyncStorage.setItem(`lastSpinDate_${deviceId}`, today);
         });
     };
 
