@@ -19,6 +19,7 @@ export const styles = StyleSheet.create({
     wheelWrapper: { alignItems: "center", justifyContent: "center", marginBottom: 20 },
     wheelContainer: { width: 300, height: 300 },
     selectedText: { fontSize: 18, fontWeight: "bold", marginBottom: 20 },
+    couponText: { fontSize: 16, fontWeight: "bold", marginBottom: 20 },
     lightText: { color: "black" },
     darkText: { color: "white" },
     button: { padding: 15, backgroundColor: "#007bff", borderRadius: 10, marginVertical: 10 },

@@ -33,6 +33,22 @@ const LuckyWheel = () => {
     const rotation = useSharedValue(0);
     const [selected, setSelected] = useState<string | null>(null);
     const [darkMode, setDarkMode] = useState(false);
+    const [couponCode, setCouponCode] = useState<string | null>(null);
+
+    const fetchCouponCode = async (type: string) => {
+        try {
+            const encodedType = encodeURIComponent(type);
+            const response = await fetch(`http://localhost:5000/coupon/addCoupon/${encodedType}`);
+            const data = await response.text();
+            setCouponCode(data);
+        } catch (error) {
+            if (error instanceof Error) {
+                setCouponCode(error.message);
+            } else {
+                setCouponCode("An unknown error occurred");
+            }
+        }
+    };
 
     const spinWheel = () => {
         const randomCoupon = getRandomCoupon();
@@ -56,11 +72,14 @@ const LuckyWheel = () => {
             const selectedSegment = Math.floor(effective / SEGMENT_ANGLE) % COUPONS.length;
             if (selectedSegment > 1) {
                 runOnJS(setSelected)(COUPONS[selectedSegment-2]);
+                fetchCouponCode((selectedSegment-2).toString());
             } else if (selectedSegment === 1) {
-                runOnJS(setSelected)(COUPONS[COUPONS.length-1]);
+            runOnJS(setSelected)(COUPONS[COUPONS.length-1]);
+            fetchCouponCode((COUPONS.length-1).toString());
             }
             else {
                 runOnJS(setSelected)(COUPONS[COUPONS.length-2]);
+                fetchCouponCode((COUPONS.length-2).toString());
             }
         });
     };
@@ -148,6 +167,13 @@ const LuckyWheel = () => {
             <Text style={[styles.selectedText, darkMode ? styles.darkText : styles.lightText]}>
                 {selected === "NEM NYERT" ? "Sajnálom, nem nyertél :(" : selected ? `Gratulálok az ön nyereménye: ${selected}` : "Pörgesd meg a kereket!"}
             </Text>
+
+            {/* Kupon kód */}
+            {couponCode && (
+                <Text style={[styles.couponText, darkMode ? styles.darkText : styles.lightText]}>
+                    {couponCode}
+                </Text>
+            )}
 
             {/* Pörgetés gomb */}
             <TouchableOpacity onPress={spinWheel} style={styles.button}>
