@@ -1,7 +1,8 @@
 import React from "react";
-import { View, TouchableOpacity, Text } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { styles } from "./styles";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const Footer = ({ darkMode }: { darkMode: boolean }) => {
     return (
@@ -9,11 +10,14 @@ const Footer = ({ darkMode }: { darkMode: boolean }) => {
             colors={darkMode ? ['#0f0c29', '#302b63', '#24243e'] : ['#a18cd1', '#fbc2eb']}
             style={styles.footer}
         >
-            <TouchableOpacity style={styles.footerButton}>
-                <Text style={styles.footerButtonText}>Szerencsekerék</Text>
+            {/* Szerencsekerék ikon */}
+            <TouchableOpacity style={styles.footerIconButton}>
+                <Ionicons name="game-controller" size={30} color="white" />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.footerButton}>
-                <Text style={styles.footerButtonText}>Weboldal</Text>
+
+            {/* Weboldal ikon */}
+            <TouchableOpacity style={styles.footerIconButton}>
+                <Ionicons name="globe-outline" size={30} color="white" />
             </TouchableOpacity>
         </LinearGradient>
     );

@@ -45,4 +45,12 @@ export const styles = StyleSheet.create({
         color: "white",
         fontWeight: "bold",
     },
+    footerIconButton: {
+        width: 60,
+        height: 60,
+        borderRadius: 30, // Kör alakú gomb
+        backgroundColor: "#007bff",
+        justifyContent: "center",
+        alignItems: "center",
+    },
 });
