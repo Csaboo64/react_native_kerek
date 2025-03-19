@@ -214,7 +214,7 @@ const LuckyWheel = () => {
                 <Text style={styles.buttonText}>{darkMode ? "Világos mód" : "Sötét mód"}</Text>
             </TouchableOpacity>
 
-            <Footer /> {/* Footer hozzáadása */}
+            <Footer darkMode={darkMode} /> {/* Footer hozzáadása */}
         </LinearGradient>
     );
 };

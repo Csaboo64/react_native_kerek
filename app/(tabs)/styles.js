@@ -26,12 +26,14 @@ export const styles = StyleSheet.create({
     buttonText: { color: "white", fontWeight: "bold", fontSize: 16 },
     darkModeButton: { backgroundColor: "#555" },
     footer: {
+        position: "absolute",
+        bottom: 0,
+        width: "100%",
         flexDirection: "row",
         justifyContent: "space-around",
         alignItems: "center",
-        width: "100%",
         padding: 10,
-        backgroundColor: "#f0f0f0",
+        backgroundColor: "transparent", // A háttérszín a LinearGradient-ből jön
     },
     footerButton: {
         padding: 10,
