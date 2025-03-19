@@ -32,7 +32,8 @@ export const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-around",
         alignItems: "center",
-        padding: 10,
+        padding: 20,
+        height: 100,
         backgroundColor: "transparent", // A háttérszín a LinearGradient-ből jön
     },
     footerButton: {
