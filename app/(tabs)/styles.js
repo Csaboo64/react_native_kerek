@@ -25,4 +25,21 @@ export const styles = StyleSheet.create({
     button: { padding: 15, backgroundColor: "#007bff", borderRadius: 10, marginVertical: 10 },
     buttonText: { color: "white", fontWeight: "bold", fontSize: 16 },
     darkModeButton: { backgroundColor: "#555" },
+    footer: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        alignItems: "center",
+        width: "100%",
+        padding: 10,
+        backgroundColor: "#f0f0f0",
+    },
+    footerButton: {
+        padding: 10,
+        backgroundColor: "#007bff",
+        borderRadius: 5,
+    },
+    footerButtonText: {
+        color: "white",
+        fontWeight: "bold",
+    },
 });

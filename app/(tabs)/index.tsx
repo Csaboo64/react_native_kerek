@@ -4,6 +4,7 @@ import Svg, { Path, G, Text as SvgText, TSpan, Circle } from "react-native-svg";
 import Animated, { useSharedValue, withTiming, useAnimatedStyle, runOnJS } from "react-native-reanimated";
 import { LinearGradient } from 'expo-linear-gradient';
 import { styles } from './styles';
+import Footer from './Footer'; // Importáljuk a Footer komponenst
 
 const COUPONS = ["10% OFF", "20% OFF", "NEM NYERT", "50% OFF", "1000Ft KUPON", "INGYENES SZÁLLÍTÁS"];
 const COLORS = ["#FF5733", "#33FF57", "#5733FF", "#FFD700", "#FF33A1", "#33FFF5"];
@@ -184,6 +185,8 @@ const LuckyWheel = () => {
             <TouchableOpacity onPress={toggleDarkMode} style={[styles.button, styles.darkModeButton]}>
                 <Text style={styles.buttonText}>{darkMode ? "Világos mód" : "Sötét mód"}</Text>
             </TouchableOpacity>
+
+            <Footer /> {/* Footer hozzáadása */}
         </LinearGradient>
     );
 };
