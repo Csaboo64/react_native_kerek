@@ -5,8 +5,8 @@ import Animated, { useSharedValue, withTiming, useAnimatedStyle, runOnJS } from 
 import { LinearGradient } from 'expo-linear-gradient';
 import { styles } from './styles';
 import Footer from './Footer'; // Importáljuk a Footer komponenst
-import DeviceInfo from 'react-native-device-info';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+/* import DeviceInfo from 'react-native-device-info';
+import AsyncStorage from '@react-native-async-storage/async-storage'; */
 
 const COUPONS = ["10% OFF", "20% OFF", "NEM NYERT", "50% OFF", "1000Ft KUPON", "INGYENES SZÁLLÍTÁS"];
 const COLORS = ["#FF5733", "#33FF57", "#5733FF", "#FFD700", "#FF33A1", "#33FFF5"];
@@ -38,26 +38,36 @@ const LuckyWheel = () => {
     const [darkMode, setDarkMode] = useState(false);
     const [couponCode, setCouponCode] = useState<string | null>(null);
 
-    useEffect(() => {
+/*     useEffect(() => {
         checkLastSpinDate();
-    }, []);
+    }, []); */
 
     const fetchCouponCode = async (type: string) => {
         try {
             const encodedType = encodeURIComponent(type);
-            const response = await fetch(`http://localhost:5000/coupon/addCoupon/${encodedType}`);
+            const response = await fetch(`http://10.148.150.74:5000/coupon/addCoupon/${encodedType}`);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
             const data = await response.text();
+            console.log("Coupon code fetched:", data);
             setCouponCode(data);
         } catch (error) {
+            console.error("Error fetching coupon code:", error);
+
+            // Részletesebb naplózás
             if (error instanceof Error) {
-                setCouponCode(error.message);
+                console.error("Error message:", error.message);
+                console.error("Error stack:", error.stack);
             } else {
-                setCouponCode("An unknown error occurred");
+                console.error("Unknown error occurred during fetch.");
             }
         }
     };
 
-    const checkLastSpinDate = async () => {
+    /* const checkLastSpinDate = async () => {
         const deviceId = DeviceInfo.getUniqueId();
         const lastSpinDate = await AsyncStorage.getItem(`lastSpinDate_${deviceId}`);
         const today = new Date().toISOString().split('T')[0];
@@ -66,18 +76,9 @@ const LuckyWheel = () => {
         if (lastSpinDate === today) {
             console.log("Ma már pörgetted a kereket. Kérlek próbáld újra holnap.");
         }
-    };
+    }; */
 
     const spinWheel = async () => {
-        const deviceId = DeviceInfo.getUniqueId();
-        const lastSpinDate = await AsyncStorage.getItem(`lastSpinDate_${deviceId}`);
-        const today = new Date().toISOString().split('T')[0];
-
-        if (lastSpinDate === today) {
-            console.log("Ma már pörgetted a kereket. Kérlek próbáld újra holnap.");
-            return;
-        }
-
         const randomCoupon = getRandomCoupon();
         const randomSegment = COUPONS.indexOf(randomCoupon);
         const extraTurns = Math.floor(Math.random() * 3) + 3; // Véletlenszerűen 3-5 teljes fordulat
@@ -90,26 +91,37 @@ const LuckyWheel = () => {
         const duration = Math.floor(Math.random() * 2000) + 2000;
 
         // Animáció indítása
-        rotation.value = withTiming(finalRotation, { duration }, () => {
-            // Számoljuk ki az effektív szöget a nyíl szempontjából
-            let effective = 90 - finalRotation;
-            effective = ((effective % 360) + 360) % 360; // normalizáljuk 0-359° közé
+        rotation.value = withTiming(finalRotation, { duration }, async () => {
+            try {
+                let effective = 90 - finalRotation;
+                effective = ((effective % 360) + 360) % 360;
 
-            // A megfelelő szegmens indexje
-            const selectedSegment = Math.floor(effective / SEGMENT_ANGLE) % COUPONS.length;
-            if (selectedSegment > 1) {
-                runOnJS(setSelected)(COUPONS[selectedSegment-2]);
-                fetchCouponCode((selectedSegment-2).toString());
-            } else if (selectedSegment === 1) {
-            runOnJS(setSelected)(COUPONS[COUPONS.length-1]);
-            fetchCouponCode((COUPONS.length-1).toString());
-            }
-            else {
-                runOnJS(setSelected)(COUPONS[COUPONS.length-2]);
-                fetchCouponCode((COUPONS.length-2).toString());
-            }
+                const selectedSegment = Math.floor(effective / SEGMENT_ANGLE) % COUPONS.length;
 
-            AsyncStorage.setItem(`lastSpinDate_${deviceId}`, today);
+                console.log("Effective angle:", effective);
+                console.log("Selected segment index:", selectedSegment);
+
+                if (selectedSegment > 1) {
+                    runOnJS(setSelected)(COUPONS[selectedSegment - 2]);
+                    await runOnJS(fetchCouponCode)((selectedSegment - 2).toString());
+                } else if (selectedSegment === 1) {
+                    runOnJS(setSelected)(COUPONS[COUPONS.length - 1]);
+                    await runOnJS(fetchCouponCode)((COUPONS.length - 1).toString());
+                } else {
+                    runOnJS(setSelected)(COUPONS[COUPONS.length - 2]);
+                    await runOnJS(fetchCouponCode)((COUPONS.length - 2).toString());
+                }
+            } catch (error) {
+                console.error("Error in runOnJS or fetchCouponCode:", error);
+
+                // Részletesebb naplózás
+                if (error instanceof Error) {
+                    console.error("Error message:", error.message);
+                    console.error("Error stack:", error.stack);
+                } else {
+                    console.error("Unknown error occurred during animation.");
+                }
+            }
         });
     };
 
