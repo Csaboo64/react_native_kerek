@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StatusBar, Alert } from "react-native";
+import { WebView } from "react-native-webview";
 import Svg, { Path, G, Text as SvgText, TSpan, Circle } from "react-native-svg";
 import Animated, { useSharedValue, withTiming, useAnimatedStyle, runOnJS } from "react-native-reanimated";
 import { LinearGradient } from 'expo-linear-gradient';
@@ -37,6 +38,15 @@ const LuckyWheel = () => {
     const [selected, setSelected] = useState<string | null>(null);
     const [darkMode, setDarkMode] = useState(false);
     const [couponCode, setCouponCode] = useState<string | null>(null);
+    const [showWebView, setShowWebView] = useState(false);
+
+    const openWebsite = () => {
+        setShowWebView(true);
+    };
+
+    const openWheel = () => {
+        setShowWebView(false);
+    };
 
 /*     useEffect(() => {
         checkLastSpinDate();
@@ -45,7 +55,7 @@ const LuckyWheel = () => {
     const fetchCouponCode = async (type: string) => {
         try {
             const encodedType = encodeURIComponent(type);
-            const response = await fetch(`http://10.148.150.74:5000/coupon/addCoupon/${encodedType}`);
+            const response = await fetch(`http://192.168.100.27:5000/coupon/addCoupon/${encodedType}`);
             
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -139,94 +149,103 @@ const LuckyWheel = () => {
             style={styles.container}
         >
             <StatusBar barStyle={darkMode ? "light-content" : "dark-content"} />
-            
-            {/* App címe */}
-            <Text style={[styles.title, darkMode ? styles.darkText : styles.lightText]}>
-                HyperchargeMarket Szerencsekerék
-            </Text>
 
-            {/* Nyíl a tetején */}
-            <View style={styles.arrowWrapper}>
-                <View style={styles.arrow} />
-            </View>
+            {showWebView ? (
+                <WebView
+                    source={{ uri: "http://localhost:5173" }}
+                    style={{ flex: 1 }}
+                />
+            ) : (
+                <>
+                    {/* App címe */}
+                    <Text style={[styles.title, darkMode ? styles.darkText : styles.lightText]}>
+                        HyperchargeMarket Szerencsekerék
+                    </Text>
 
-            {/* Szerencsekerék */}
-            <View style={styles.wheelWrapper}>
-                <Animated.View style={[styles.wheelContainer, animatedStyle]}>
-                    <Svg height="300" width="300" viewBox="0 0 200 200">
-                        <Circle cx="100" cy="100" r="100" fill="#fff" />
-                        <G rotation={-90} origin="100,100">
-                            {COUPONS.map((coupon, i) => {
-                                const startAngle = i * SEGMENT_ANGLE;
-                                const endAngle = (i + 1) * SEGMENT_ANGLE;
-                                const largeArcFlag = endAngle - startAngle > 180 ? 1 : 0;
+                    {/* Nyíl a tetején */}
+                    <View style={styles.arrowWrapper}>
+                        <View style={styles.arrow} />
+                    </View>
 
-                                const x1 = 100 + 100 * Math.cos((Math.PI * startAngle) / 180);
-                                const y1 = 100 + 100 * Math.sin((Math.PI * startAngle) / 180);
-                                const x2 = 100 + 100 * Math.cos((Math.PI * endAngle) / 180);
-                                const y2 = 100 + 100 * Math.sin((Math.PI * endAngle) / 180);
+                    {/* Szerencsekerék */}
+                    <View style={styles.wheelWrapper}>
+                        <Animated.View style={[styles.wheelContainer, animatedStyle]}>
+                            <Svg height="300" width="300" viewBox="0 0 200 200">
+                                <Circle cx="100" cy="100" r="100" fill="#fff" />
+                                <G rotation={-90} origin="100,100">
+                                    {COUPONS.map((coupon, i) => {
+                                        const startAngle = i * SEGMENT_ANGLE;
+                                        const endAngle = (i + 1) * SEGMENT_ANGLE;
+                                        const largeArcFlag = endAngle - startAngle > 180 ? 1 : 0;
 
-                                const textX = 100 + 60 * Math.cos((Math.PI * (startAngle + endAngle) / 2) / 180);
-                                const textY = 100 + 60 * Math.sin((Math.PI * (startAngle + endAngle) / 2) / 180);
+                                        const x1 = 100 + 100 * Math.cos((Math.PI * startAngle) / 180);
+                                        const y1 = 100 + 100 * Math.sin((Math.PI * startAngle) / 180);
+                                        const x2 = 100 + 100 * Math.cos((Math.PI * endAngle) / 180);
+                                        const y2 = 100 + 100 * Math.sin((Math.PI * endAngle) / 180);
 
-                                return (
-                                    <G key={i}>
-                                        <Path
-                                            d={`M100,100 L${x1},${y1} A100,100 0 ${largeArcFlag},1 ${x2},${y2} Z`}
-                                            fill={COLORS[i]}
-                                            stroke="white"
-                                            strokeWidth="2"
-                                        />
-                                        <SvgText
-                                            x={textX}
-                                            y={textY}
-                                            fill="white"
-                                            fontSize={coupon === "INGYENES SZÁLLÍTÁS" ? "8" : "10"}
-                                            fontWeight="bold"
-                                            textAnchor="middle"
-                                            transform={`rotate(${(startAngle + endAngle) / 2}, ${textX}, ${textY})`}
-                                        >
-                                            {coupon === "INGYENES SZÁLLÍTÁS" ? (
-                                                <>
-                                                    <TSpan x={textX} dy="-0.4em">INGYENES</TSpan>
-                                                    <TSpan x={textX} dy="1.2em">SZÁLLÍTÁS</TSpan>
-                                                </>
-                                            ) : (
-                                                coupon
-                                            )}
-                                        </SvgText>
-                                    </G>
-                                );
-                            })}
-                        </G>
-                        <Circle cx="100" cy="100" r="10" fill="#000" />
-                    </Svg>
-                </Animated.View>
-            </View>
+                                        const textX = 100 + 60 * Math.cos((Math.PI * (startAngle + endAngle) / 2) / 180);
+                                        const textY = 100 + 60 * Math.sin((Math.PI * (startAngle + endAngle) / 2) / 180);
 
-            {/* Kipörgetett nyeremény */}
-            <Text style={[styles.selectedText, darkMode ? styles.darkText : styles.lightText]}>
-                {selected === "NEM NYERT" ? "Sajnálom, nem nyertél :(" : selected ? `Gratulálok az ön nyereménye: ${selected}` : "Pörgesd meg a kereket!"}
-            </Text>
+                                        return (
+                                            <G key={i}>
+                                                <Path
+                                                    d={`M100,100 L${x1},${y1} A100,100 0 ${largeArcFlag},1 ${x2},${y2} Z`}
+                                                    fill={COLORS[i]}
+                                                    stroke="white"
+                                                    strokeWidth="2"
+                                                />
+                                                <SvgText
+                                                    x={textX}
+                                                    y={textY}
+                                                    fill="white"
+                                                    fontSize={coupon === "INGYENES SZÁLLÍTÁS" ? "8" : "10"}
+                                                    fontWeight="bold"
+                                                    textAnchor="middle"
+                                                    transform={`rotate(${(startAngle + endAngle) / 2}, ${textX}, ${textY})`}
+                                                >
+                                                    {coupon === "INGYENES SZÁLLÍTÁS" ? (
+                                                        <>
+                                                            <TSpan x={textX} dy="-0.4em">INGYENES</TSpan>
+                                                            <TSpan x={textX} dy="1.2em">SZÁLLÍTÁS</TSpan>
+                                                        </>
+                                                    ) : (
+                                                        coupon
+                                                    )}
+                                                </SvgText>
+                                            </G>
+                                        );
+                                    })}
+                                </G>
+                                <Circle cx="100" cy="100" r="10" fill="#000" />
+                            </Svg>
+                        </Animated.View>
+                    </View>
 
-            {/* Kupon kód */}
-            {couponCode && (
-                <Text style={[styles.couponText, darkMode ? styles.darkText : styles.lightText]}>
-                    {couponCode}
-                </Text>
+                    {/* Kipörgetett nyeremény */}
+                    <Text style={[styles.selectedText, darkMode ? styles.darkText : styles.lightText]}>
+                        {selected === "NEM NYERT" ? "Sajnálom, nem nyertél :(" : selected ? `Gratulálok az ön nyereménye: ${selected}` : "Pörgesd meg a kereket!"}
+                    </Text>
+
+                    {/* Kupon kód */}
+                    {couponCode && (
+                        <Text style={[styles.couponText, darkMode ? styles.darkText : styles.lightText]}>
+                            {couponCode}
+                        </Text>
+                    )}
+
+                    {/* Pörgetés gomb */}
+                    <TouchableOpacity onPress={spinWheel} style={styles.button}>
+                        <Text style={styles.buttonText}>Pörgetés</Text>
+                    </TouchableOpacity>
+
+                    {/* Sötét mód váltó gomb */}
+                    <TouchableOpacity onPress={toggleDarkMode} style={[styles.button, styles.darkModeButton]}>
+                        <Text style={styles.buttonText}>{darkMode ? "Világos mód" : "Sötét mód"}</Text>
+                    </TouchableOpacity>
+                </>
             )}
 
-            {/* Pörgetés gomb */}
-            <TouchableOpacity onPress={spinWheel} style={styles.button}>
-                <Text style={styles.buttonText}>Pörgetés</Text>
-            </TouchableOpacity>
-
-            {/* Sötét mód váltó gomb */}
-            <TouchableOpacity onPress={toggleDarkMode} style={[styles.button, styles.darkModeButton]}>
-                <Text style={styles.buttonText}>{darkMode ? "Világos mód" : "Sötét mód"}</Text>
-            </TouchableOpacity>
-
-            <Footer darkMode={darkMode} /> {/* Footer hozzáadása */}
+            <Footer darkMode={darkMode} onOpenWebsite={openWebsite} onOpenWheel={openWheel} />
         </LinearGradient>
     );
 };
