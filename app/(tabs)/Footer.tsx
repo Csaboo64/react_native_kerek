@@ -1,7 +1,7 @@
 import React from "react";
 import { View, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { styles } from "./styles";
+import { styles } from "../../styles/styles";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 const Footer = ({ darkMode, onOpenWebsite, onOpenWheel }: { darkMode: boolean; onOpenWebsite: () => void; onOpenWheel: () => void }) => {

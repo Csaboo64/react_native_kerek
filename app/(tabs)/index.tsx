@@ -4,7 +4,7 @@ import { WebView } from "react-native-webview";
 import Svg, { Path, G, Text as SvgText, TSpan, Circle } from "react-native-svg";
 import Animated, { useSharedValue, withTiming, useAnimatedStyle, runOnJS } from "react-native-reanimated";
 import { LinearGradient } from 'expo-linear-gradient';
-import { styles } from './styles';
+import { styles } from '../../styles/styles';
 import Footer from './Footer'; // Importáljuk a Footer komponenst
 /* import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-async-storage/async-storage'; */
@@ -48,14 +48,18 @@ const LuckyWheel = () => {
         setShowWebView(false);
     };
 
-/*     useEffect(() => {
-        checkLastSpinDate();
-    }, []); */
-
     const fetchCouponCode = async (type: string) => {
         try {
             const encodedType = encodeURIComponent(type);
-            const response = await fetch(`http://192.168.100.27:5000/coupon/addCoupon/${encodedType}`);
+            const response = await fetch(`http://10.148.149.43:5000/coupon/addCoupon/${encodedType}`, {
+                method: "POST", // POST metódus
+                headers: {
+                    "Content-Type": "application/json", // JSON formátumú adatok küldése
+                },
+         
+            });
+
+            
             
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -143,27 +147,48 @@ const LuckyWheel = () => {
         setDarkMode(!darkMode);
     };
 
+    const backgroundColor = darkMode ? "#121212" : "#FFFFFF";
+    const textColor = darkMode ? "#FFFFFF" : "#333333";
+
     return (
-        <LinearGradient
-            colors={darkMode ? ['#0f0c29', '#302b63', '#24243e'] : ['#a18cd1', '#fbc2eb']}
-            style={styles.container}
-        >
+        <View style={{ flex: 1, backgroundColor }}>
             <StatusBar barStyle={darkMode ? "light-content" : "dark-content"} />
 
             {showWebView ? (
                 <WebView
-                    source={{ uri: "http://localhost:5173" }}
-                    style={{ flex: 1 }}
+                    source={{ uri: 'http://10.148.149.43:5173/' }}
+                    javaScriptEnabled={true}
+                    domStorageEnabled={true}
+                    startInLoadingState={true}
+                    style={{ flex: 1, marginTop: 55 }}
+                    onError={(syntheticEvent) => {
+                        const { nativeEvent } = syntheticEvent;
+                        console.error("WebView error: ", nativeEvent);
+                        Alert.alert("Hiba történt a weboldal betöltésekor.", nativeEvent.description);
+                    }}
+                    onHttpError={(syntheticEvent) => {
+                        const { nativeEvent } = syntheticEvent;
+                        console.error("HTTP error: ", nativeEvent);
+                        Alert.alert("HTTP hiba történt.", `Kód: ${nativeEvent.statusCode}`);
+                    }}
                 />
             ) : (
-                <>
+                 <LinearGradient
+           colors={darkMode ? ['#0f0c29', '#302b63', '#24243e'] : ['#a18cd1', '#fbc2eb']}
+            style={styles.container}
+            
+        >
+            
+                <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+              
+
                     {/* App címe */}
-                    <Text style={[styles.title, darkMode ? styles.darkText : styles.lightText]}>
+                    <Text style={[styles.title, { color: textColor }]}>
                         HyperchargeMarket Szerencsekerék
                     </Text>
 
-                    {/* Nyíl a tetején */}
-                    <View style={styles.arrowWrapper}>
+                          {/* Nyíl a szerencsekerék fölött */}
+                          <View style={styles.arrowWrapper}>
                         <View style={styles.arrow} />
                     </View>
 
@@ -222,7 +247,7 @@ const LuckyWheel = () => {
                     </View>
 
                     {/* Kipörgetett nyeremény */}
-                    <Text style={[styles.selectedText, darkMode ? styles.darkText : styles.lightText]}>
+                    <Text style={[styles.selectedText, { color: textColor }]}>
                         {selected === "NEM NYERT" ? "Sajnálom, nem nyertél :(" : selected ? `Gratulálok az ön nyereménye: ${selected}` : "Pörgesd meg a kereket!"}
                     </Text>
 
@@ -234,19 +259,20 @@ const LuckyWheel = () => {
                     )}
 
                     {/* Pörgetés gomb */}
-                    <TouchableOpacity onPress={spinWheel} style={styles.button}>
-                        <Text style={styles.buttonText}>Pörgetés</Text>
+                    <TouchableOpacity onPress={spinWheel} style={[styles.button, { backgroundColor: darkMode ? "#333333" : "#DDDDDD" }]}>
+                        <Text style={[styles.buttonText, { color: textColor }]}>Pörgetés</Text>
                     </TouchableOpacity>
 
                     {/* Sötét mód váltó gomb */}
-                    <TouchableOpacity onPress={toggleDarkMode} style={[styles.button, styles.darkModeButton]}>
-                        <Text style={styles.buttonText}>{darkMode ? "Világos mód" : "Sötét mód"}</Text>
+                    <TouchableOpacity onPress={toggleDarkMode} style={[styles.button, { backgroundColor: darkMode ? "#333333" : "#DDDDDD" }]}>
+                        <Text style={[styles.buttonText, { color: textColor }]}>{darkMode ? "Világos mód" : "Sötét mód"}</Text>
                     </TouchableOpacity>
-                </>
+                </View>
+            </LinearGradient>
             )}
 
             <Footer darkMode={darkMode} onOpenWebsite={openWebsite} onOpenWheel={openWheel} />
-        </LinearGradient>
+        </View>
     );
 };
 
