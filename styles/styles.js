@@ -67,4 +67,21 @@ export const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
+    copyButton: {
+        marginLeft: 10,
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        borderRadius: 5,
+        alignItems: "center",
+        justifyContent: "center",
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    copyButtonText: {
+        fontSize: 14,
+        fontWeight: "bold",
+    },
 });
