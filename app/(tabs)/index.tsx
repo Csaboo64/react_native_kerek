@@ -6,8 +6,7 @@ import Animated, { useSharedValue, withTiming, useAnimatedStyle, runOnJS } from 
 import { LinearGradient } from 'expo-linear-gradient';
 import { styles } from '../../styles/styles';
 import Footer from './Footer'; // Importáljuk a Footer komponenst
-/* import DeviceInfo from 'react-native-device-info';
-import AsyncStorage from '@react-native-async-storage/async-storage'; */
+
 
 const COUPONS = ["10% OFF", "20% OFF", "NEM NYERT", "50% OFF", "1000Ft KUPON", "INGYENES SZÁLLÍTÁS"];
 const COLORS = ["#FF5733", "#33FF57", "#5733FF", "#FFD700", "#FF33A1", "#33FFF5"];
@@ -39,7 +38,7 @@ const LuckyWheel = () => {
     const [darkMode, setDarkMode] = useState(false);
     const [couponCode, setCouponCode] = useState<string | null>(null);
     const [showWebView, setShowWebView] = useState(false);
-    const [currentUrl, setCurrentUrl] = useState('http://10.148.149.43:5173/'); // Alapértelmezett URL
+    const [currentUrl, setCurrentUrl] = useState('http://10.148.149.59:5173/'); // Alapértelmezett URL
 
     const openWebsite = () => {
         setShowWebView(true);
@@ -52,7 +51,7 @@ const LuckyWheel = () => {
     const fetchCouponCode = async (type: string) => {
         try {
             const encodedType = encodeURIComponent(type);
-            const response = await fetch(`http://10.148.149.43:5000/coupon/addCoupon/${encodedType}`, {
+            const response = await fetch(`http://10.148.149.59:5000/coupon/addCoupon/${encodedType}`, {
                 method: "POST", // POST metódus
                 headers: {
                     "Content-Type": "application/json", // JSON formátumú adatok küldése
@@ -82,16 +81,8 @@ const LuckyWheel = () => {
         }
     };
 
-    /* const checkLastSpinDate = async () => {
-        const deviceId = DeviceInfo.getUniqueId();
-        const lastSpinDate = await AsyncStorage.getItem(`lastSpinDate_${deviceId}`);
-        const today = new Date().toISOString().split('T')[0];
-        console.log(today);
 
-        if (lastSpinDate === today) {
-            console.log("Ma már pörgetted a kereket. Kérlek próbáld újra holnap.");
-        }
-    }; */
+
 
     const spinWheel = async () => {
         const randomCoupon = getRandomCoupon();
