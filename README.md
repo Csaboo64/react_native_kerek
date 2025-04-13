@@ -33,8 +33,3 @@ A **Hypercharge Market** egy webshop alkalmazás, amely lehetővé teszi a felha
 ## 💻 Webshop 
 
 🔗 **A projekt Frontend és Backend részére készített GitHub repo:** [Frontend+Backend](https://github.com/Moha0170/vizsgaremek2025)
-
----
-## 📞 Elérhetőségek
-
-Ha bármilyen kérdésed van, akkor vedd fel a kapcsolatot a megfelelő fejlesztővel!
