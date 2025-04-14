@@ -1,16 +1,16 @@
-# Vizsgaremek 2025 Mobil
+# Vizsgaremek 2025 Mobil 😱
 
 
 
-## Get started
+## App futtatása
 
-1. Install dependencies
+1. Töltsük le a szükséges fájlokat 🤙
 
    ```bash
    npm install
    ```
 
-2. Start the app
+2. Inditsük el az appot 😎
 
    ```bash
     npx expo start
