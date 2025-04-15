@@ -10,7 +10,28 @@
    npm install
    ```
 
-2. Inditsük el az appot 😎
+2. irjuk át a frontend és a backend cimeket 🤩
+
+         // 🌐 FRONTEND CÍM
+         const [currentUrl, setCurrentUrl] = useState('🔶 http://26.44.9.76:5173/ 🔶');
+
+         // 🔁 BACKEND CÍM
+         const response = await fetch(`🔷 http://192.168.0.4:5000 🔷/coupon/addCoupon/${encodedType}`);
+
+
+
+
+3. irjuk át a frontend .env nevű fájlban a localhost helyett a backend cimét 🤔
+
+        Eredeti:
+         - VITE_API_URI=http://localhost:5000   🔴
+         
+         Új:
+         + VITE_API_URI=http://192.168.0.4:5000 🔵
+
+
+
+4. Inditsük el az appot 😎
 
    ```bash
     npx expo start
