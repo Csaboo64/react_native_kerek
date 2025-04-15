@@ -38,7 +38,7 @@ const LuckyWheel = () => {
     const [darkMode, setDarkMode] = useState(false);
     const [couponCode, setCouponCode] = useState<string | null>(null);
     const [showWebView, setShowWebView] = useState(false);
-    const [currentUrl, setCurrentUrl] = useState('http://26.44.9.76:5173/'); // Alapértelmezett URL
+    const [currentUrl, setCurrentUrl] = useState('http://192.168.0.73:5173/'); // Alapértelmezett URL
 
     const openWebsite = () => {
         setShowWebView(true);
@@ -51,7 +51,7 @@ const LuckyWheel = () => {
     const fetchCouponCode = async (type: string) => {
         try {
             const encodedType = encodeURIComponent(type);
-            const response = await fetch(`http://192.168.0.4:5000/coupon/addCoupon/${encodedType}`, {
+            const response = await fetch(`http://192.168.0.73:5000/coupon/addCoupon/${encodedType}`, {
                 method: "POST", // POST metódus
                 headers: {
                     "Content-Type": "application/json", // JSON formátumú adatok küldése
